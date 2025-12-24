@@ -1,0 +1,2016 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grid Points</title>
+    <!-- Include the same styles as in header.html -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- Google Fonts - Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet" />
+    
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+      }
+
+      /* Custom Select Dropdown Styles */
+      .custom-select {
+        position: relative;
+        width: 100%;
+      }
+
+      .select-trigger {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 16px;
+        border-radius: 9999px;
+        border: 1px solid #d1d5db;
+        background-color: white;
+        font-size: 14px;
+        color: #374151;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .select-trigger:hover {
+        border-color: #fb923c;
+      }
+
+      .select-trigger:focus {
+        outline: none;
+        border-color: #fb923c;
+        box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.2);
+      }
+
+      .select-trigger span {
+        width: 220px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .select-trigger i {
+        color: #6b7280;
+        font-size: 12px;
+        transition: transform 0.2s ease;
+      }
+
+      .select-trigger.active i {
+        transform: rotate(180deg);
+      }
+
+      .select-options {
+        position: absolute;
+        top: calc(100% + 8px);
+        left: 0;
+        right: 0;
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        z-index: 50;
+        max-height: 200px;
+        overflow-y: auto;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all 0.2s ease;
+      }
+
+      .select-options.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      .select-option {
+        padding: 10px 16px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+        font-size: 14px;
+        color: #374151;
+        display: flex;
+        align-items: center;
+      }
+
+      .select-option:hover {
+        background-color: #f9fafb;
+      }
+
+      .select-option.selected {
+        background-color: #fff7ed;
+        color: #fb923c;
+        font-weight: 600;
+      }
+
+      .select-option:first-child {
+        border-radius: 12px 12px 0 0;
+      }
+
+      .select-option:last-child {
+        border-radius: 0 0 12px 12px;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      /* Required field indicator */
+      .required::after {
+        content: " *";
+        color: #ef4444;
+      }
+
+      /* Error styles */
+      .error-message {
+        color: #ef4444;
+        font-size: 12px;
+        margin-top: 4px;
+      }
+
+      .select-trigger.error {
+        border-color: #ef4444;
+      }
+
+      /* Custom Toggle Button Styles */
+      .toggle-container {
+        display: inline-flex;
+        background-color: #f3f4f6;
+        border-radius: 30px;
+        padding: 4px;
+        border: 2px solid #fb923c;
+      }
+
+      .toggle-button {
+        padding: 8px 24px;
+        border-radius: 25px;
+        font-size: 14px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: #fb923c;
+        background-color: transparent;
+        white-space: nowrap;
+      }
+
+      .toggle-button.active {
+        background-color: #fb923c;
+        color: white;
+        box-shadow: 0 2px 4px rgba(251, 146, 60, 0.3);
+      }
+
+      .toggle-button:not(.active):hover {
+        background-color: #e5e7eb;
+      }
+
+      /* Toast notification styles */
+      .toast {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 16px 24px;
+        border-radius: 8px;
+        color: white;
+        font-weight: 500;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        transform: translateX(400px);
+        transition: transform 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .toast.show {
+        transform: translateX(0);
+      }
+
+      .toast.success {
+        background-color: #10b981;
+      }
+
+      .toast.error {
+        background-color: #ef4444;
+      }
+
+      .toast.info {
+        background-color: #3b82f6;
+      }
+
+      .toast-icon {
+        flex-shrink: 0;
+      }
+
+      .toast-message {
+        flex-grow: 1;
+      }
+
+      .toast-close {
+        flex-shrink: 0;
+        cursor: pointer;
+        opacity: 0.7;
+        transition: opacity 0.2s;
+      }
+
+      .toast-close:hover {
+        opacity: 1;
+      }
+    </style>
+
+    <!-- Include the header loader script -->
+    <script src="/assets/js/main.js"></script>
+    <script src="/assets/js/auth.js"></script>
+  </head>
+
+  <body class="bg-gray-50">
+    <!-- PAGE WRAPPER -->
+    <div class="flex items-center justify-center py-3 px-1">
+      <div class="w-full max-w-6xl space-y-4">
+        <!-- TOGGLE TABS -->
+        <div class="flex justify-center">
+          <div class="toggle-container bg-orange-50">
+            <button id="uploadDataTab" class="toggle-button active">
+              Upload Data
+            </button>
+            <button id="broadcastMessageTab" class="toggle-button">
+              Broadcast Message
+            </button>
+          </div>
+        </div>
+
+        <!-- UPLOAD DATA SECTION -->
+        <div id="uploadDataSection">
+          <!-- FILTER FORM CARD -->
+          <div
+            class="bg-white rounded-3xl shadow-md border border-gray-100 px-3 py-6 md:px-10 md:py-8">
+            <!-- RTO DATA FORM -->
+            <div id="rtoDataForm" class="grid gap-4 md:grid-cols-3">
+              <!-- Vehicle -->
+              <div>
+                <label
+                  class="block text-sm font-semibold text-gray-600 mb-1 required"
+                  >username</label
+                >
+                <div class="custom-select" aria-disabled="true">
+                  <div class="select-trigger" data-value="CAR">
+                    <span id="ssUserName">username</span>
+                    <i class="fa-regular fa-user"></i>
+                  </div>
+                </div>
+                <div class="error-message hidden">
+                  Please select a vehicle type
+                </div>
+              </div>
+              <!-- Vehicle -->
+              <div>
+                <label
+                  class="block text-sm font-semibold text-gray-600 mb-1 required"
+                  >Vehicle Type</label
+                >
+                <div class="custom-select" id="vehicleTypeSelect">
+                  <div class="select-trigger" data-value="CAR">
+                    <span class="text-gray-400">Select Vehicle</span>
+                    <i class="fas fa-chevron-down"></i>
+                  </div>
+                  <div class="select-options">
+                    <div class="select-option" data-value="motor_car">Car</div>
+                    <div class="select-option" data-value="motor_tw">TW</div>
+                    <div class="select-option" data-value="motor_gcv">GCV</div>
+                    <div class="select-option" data-value="motor_taxi">TAXI</div>
+                    <div class="select-option" data-value="motor_3wh">3WH</div>
+                    <div class="select-option" data-value="motor_miscd">MISC</div>
+                    <div class="select-option" data-value="motor_bus">Bus</div>
+                  </div>
+                </div>
+                <div class="error-message hidden">
+                  Please select a vehicle type
+                </div>
+              </div>
+              <!-- Upload Excel / CSV File -->
+              <div>
+                <label
+                  class="block text-sm font-semibold text-gray-600 mb-1 required">
+                  Upload Excel File
+                </label>
+
+                <div class="custom-select">
+                  <label class="select-trigger cursor-pointer">
+                    <span id="fileName" class="text-gray-400">Choose File</span>
+                    <img src="/assets/img/upload-excel-icon.svg" alt="" />
+
+                    <!-- Hidden file input -->
+                    <input
+                      type="file"
+                      id="excelFile"
+                      class="hidden"
+                      accept=".xlsx,.xls,.csv" />
+                  </label>
+                </div>
+
+                <div class="error-message hidden">
+                  Please upload Excel or CSV file
+                </div>
+              </div>
+            </div>
+
+            <!-- SUBMIT BUTTON -->
+            <div class="mt-6 flex justify-center">
+              <button
+                id="submitBtn"
+                class="px-10 py-2 rounded-full bg-orange-400 hover:bg-orange-500 text-white font-semibold text-sm shadow transition-colors duration-300">
+                Submit
+              </button>
+            </div>
+          </div>
+
+          <!-- UPLOAD HISTORY TABLE -->
+          <div
+            class="bg-white rounded-3xl shadow-md border border-gray-100 px-3 py-6 md:px-10 md:py-8">
+            <div class="flex justify-between items-center mb-6">
+              <h2 id="historyTitle" class="text-xl font-semibold text-gray-800">Upload History - Car</h2>
+              <div class="flex items-center space-x-4">
+                <div class="custom-select" id="historyFilterSelect" style="width: 200px;">
+                  <div class="select-trigger" data-value="motor_car">
+                    <span>Car</span>
+                    <i class="fas fa-chevron-down"></i>
+                  </div>
+                  <div class="select-options">
+                    <div class="select-option selected" data-value="motor_car">Car</div>
+                    <div class="select-option" data-value="motor_tw">TW</div>
+                    <div class="select-option" data-value="motor_gcv">GCV</div>
+                    <div class="select-option" data-value="motor_taxi">TAXI</div>
+                    <div class="select-option" data-value="motor_3wh">3WH</div>
+                    <div class="select-option" data-value="motor_miscd">MISC</div>
+                    <div class="select-option" data-value="motor_bus">Bus</div>
+                  </div>
+                </div>
+                <button id="refreshHistoryBtn" class="px-4 py-2 rounded-full bg-blue-500 hover:bg-blue-600 text-white font-semibold text-sm shadow transition-colors duration-300 flex items-center">
+                  <i class="fas fa-sync-alt mr-2"></i> Refresh
+                </button>
+              </div>
+            </div>
+            
+            <div id="historyContainer" class="overflow-x-auto">
+              <!-- Loading state -->
+              <div class="text-center py-12 bg-gray-50 rounded-xl border border-gray-100">
+                <div class="inline-block animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-orange-500"></div>
+                <p class="mt-4 text-gray-600 font-medium">Loading upload history...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BROADCAST MESSAGE SECTION -->
+        <div id="broadcastMessageSection" class="hidden">
+          <!-- NOTIFICATION FORM CARD -->
+          <div class="bg-white rounded-2xl shadow-lg p-8 mb-6">
+            <form id="combinedForm">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Notification Title -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Notification Title
+                  </label>
+                  <input
+                    type="text"
+                    id="title"
+                    placeholder="Enter Notification Title"
+                    class="w-full h-12 px-5 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400 text-gray-700 placeholder-gray-400"
+                  />
+                </div>
+
+                <!-- Status -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Status
+                  </label>
+                  <div class="relative">
+                    <select
+                      id="status"
+                      class="w-full h-12 px-5 pr-10 rounded-full border border-gray-300 appearance-none focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400 text-gray-700">
+                      <option value="">Select Status</option>
+                      <option value="active">Active</option>
+                      <option value="inactive">Inactive</option>
+                      <option value="scheduled">Scheduled</option>
+                    </select>
+                    <span class="absolute inset-y-0 right-4 flex items-center pointer-events-none text-gray-400">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Message -->
+                <div class="md:col-span-2">
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Message
+                  </label>
+                  <textarea
+                    id="message"
+                    rows="5"
+                    placeholder="Enter Notification Message"
+                    class="w-full px-5 py-4 rounded-2xl border border-gray-300 resize-none focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400 text-gray-700 placeholder-gray-400">
+                  </textarea>
+                </div>
+
+                <!-- Message and Attachment side by side -->
+                <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <!-- Priority -->
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                      Priority
+                    </label>
+                    <div class="relative">
+                      <select
+                        id="isImportant"
+                        class="w-full h-12 px-5 pr-10 rounded-full border border-gray-300 appearance-none focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400 text-gray-700">
+                        <option value="false">Standard</option>
+                        <option value="true">Important</option>
+                      </select>
+                      <span class="absolute inset-y-0 right-4 flex items-center pointer-events-none text-gray-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
+                          viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- Attachment -->
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                      Attachment (Optional)
+                    </label>
+
+                    <div
+                      id="fileAttachmentDropZone"
+                      class="h-12 border-2 border-dashed border-gray-300 rounded-full flex items-center justify-center text-center px-6 text-gray-400 cursor-pointer hover:border-orange-400 transition-colors">
+                      
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                      </svg>
+
+                      <span id="fileAttachmentText" class="text-sm font-medium">
+                        Click to upload or drag and drop
+                      </span>
+                      <input type="file" id="fileAttachment" class="hidden" accept="image/*,.pdf,.doc,.docx">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Submit Button -->
+              <div class="flex justify-center mt-10">
+                <button
+                  type="submit"
+                  id="submit-button"
+                  class="bg-orange-200 hover:bg-orange-300 text-orange-600 font-medium px-10 py-3 rounded-full transition">
+                  Upload Notification
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Progress Container -->
+          <div id="progress-container" class="hidden bg-white rounded-2xl shadow-lg p-8 mb-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Upload Progress</h3>
+            <div class="mb-4">
+              <div class="flex justify-between mb-1">
+                <span id="progress-status">Processing...</span>
+                <span id="progress-percentage">0%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2.5">
+                <div id="progress-bar" class="bg-orange-500 h-2.5 rounded-full" style="width: 0%"></div>
+              </div>
+            </div>
+            <div class="flex justify-between text-sm text-gray-600">
+              <span>Processed: <span id="processed-rows">0</span> / <span id="total-rows">0</span> rows</span>
+              <span id="progress-time">Time remaining: --:--</span>
+            </div>
+          </div>
+
+          <!-- NOTIFICATIONS TABLE -->
+          <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <!-- Table Header -->
+            <div class="flex justify-between items-center p-6 border-b border-gray-200">
+              <h2 class="text-xl font-semibold text-gray-800">All Notifications</h2>
+              <div class="flex items-center space-x-4">
+                <div class="relative">
+                  <input
+                    type="text"
+                    id="searchQuery"
+                    placeholder="Search notifications..."
+                    class="w-64 h-10 pl-10 pr-4 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400 text-gray-700 placeholder-gray-400"
+                  />
+                  <span class="absolute inset-y-0 left-3 flex items-center pointer-events-none text-gray-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
+                      viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                  </span>
+                </div>
+                <div class="relative">
+                  <select
+                    id="filterStatus"
+                    class="h-10 px-4 pr-8 rounded-full border border-gray-300 appearance-none focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400 text-gray-700 text-sm">
+                    <option value="all">All Status</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                  </select>
+                  <span class="absolute inset-y-0 right-2 flex items-center pointer-events-none text-gray-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
+                      viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </span>
+                </div>
+                <div class="relative">
+                  <select
+                    id="filterPriority"
+                    class="h-10 px-4 pr-8 rounded-full border border-gray-300 appearance-none focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400 text-gray-700 text-sm">
+                    <option value="all">All Priority</option>
+                    <option value="important">Important</option>
+                    <option value="standard">Standard</option>
+                  </select>
+                  <span class="absolute inset-y-0 right-2 flex items-center pointer-events-none text-gray-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
+                      viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </span>
+                </div>
+                <button id="refresh-history-btn" class="px-4 py-2 rounded-full bg-blue-500 hover:bg-blue-600 text-white font-semibold text-sm shadow transition-colors duration-300 flex items-center">
+                  <i class="fas fa-sync-alt mr-2"></i> Refresh
+                </button>
+              </div>
+            </div>
+
+            <!-- Table -->
+            <table class="w-full">
+              <!-- Header -->
+              <thead class="bg-orange-500">
+                <tr>
+                  <th class="px-6 py-4 text-left text-white font-semibold">Title</th>
+                  <th class="px-6 py-4 text-left text-white font-semibold">Message</th>
+                  <th class="px-6 py-4 text-left text-white font-semibold">Priority</th>
+                  <th class="px-6 py-4 text-left text-white font-semibold">Status</th>
+                  <th class="px-6 py-4 text-left text-white font-semibold">Created At</th>
+                  <th class="px-6 py-4 text-right text-white font-semibold">Actions</th>
+                </tr>
+              </thead>
+
+              <!-- Body -->
+              <tbody id="notificationsTableBody" class="divide-y divide-gray-200">
+                <!-- Loading state -->
+                <tr>
+                  <td colspan="6" class="text-center py-12 bg-gray-50">
+                    <div class="inline-block animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-orange-500"></div>
+                    <p class="mt-4 text-gray-600 font-medium">Loading notifications...</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- View Notification Modal -->
+    <div id="notificationModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50 overflow-y-auto h-full w-full">
+      <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/5 shadow-lg rounded-md bg-white">
+        <div class="mt-3">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-medium text-gray-900">Notification Details</h3>
+            <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <div class="space-y-4">
+            <div>
+              <span class="text-sm font-medium text-gray-500">Title:</span>
+              <p id="modalNotificationTitle" class="mt-1 text-sm text-gray-900"></p>
+            </div>
+            <div>
+              <span class="text-sm font-medium text-gray-500">Message:</span>
+              <p id="modalNotificationMessage" class="mt-1 text-sm text-gray-900"></p>
+            </div>
+            <div class="flex space-x-4">
+              <div>
+                <span class="text-sm font-medium text-gray-500">Priority:</span>
+                <span id="modalPriority" class="mt-1 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"></span>
+              </div>
+              <div>
+                <span class="text-sm font-medium text-gray-500">Status:</span>
+                <span id="modalStatus" class="mt-1 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"></span>
+              </div>
+            </div>
+            <div id="modalFileAttachmentDiv" style="display: none;">
+              <span class="text-sm font-medium text-gray-500">Attachment:</span>
+              <a id="modalFileAttachment" href="#" target="_blank" class="mt-1 inline-flex items-center text-blue-600 hover:text-blue-800">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13l-3-3m0 0l-3 3m3-3v12" />
+                </svg>
+                <span id="modalFileName"></span>
+              </a>
+            </div>
+            <div>
+              <span class="text-sm font-medium text-gray-500">Created At:</span>
+              <p id="modalCreatedAt" class="mt-1 text-sm text-gray-900"></p>
+            </div>
+            <div>
+              <span class="text-sm font-medium text-gray-500">Updated At:</span>
+              <p id="modalUpdatedAt" class="mt-1 text-sm text-gray-900"></p>
+            </div>
+            <div>
+              <span class="text-sm font-medium text-gray-500">Updated By:</span>
+              <p id="modalUpdatedBy" class="mt-1 text-sm text-gray-900"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Notification Modal -->
+    <div id="editNotificationModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50 overflow-y-auto h-full w-full">
+      <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/5 shadow-lg rounded-md bg-white">
+        <div class="mt-3">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-medium text-gray-900">Edit Notification</h3>
+            <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <form id="editNotificationForm">
+            <input type="hidden" id="editNotificationId">
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Title</label>
+                <input type="text" id="editTitle" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                <textarea id="editMessage" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"></textarea>
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Priority</label>
+                  <select id="editIsImportant" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
+                    <option value="false">Standard</option>
+                    <option value="true">Important</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                  <select id="editStatus" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                  </select>
+                </div>
+              </div>
+              <div id="currentFileAttachment" class="hidden">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Current Attachment</label>
+                <a id="currentFileLink" href="#" target="_blank" class="text-blue-600 hover:text-blue-800">
+                  <span id="currentFileName"></span>
+                </a>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Replace Attachment (Optional)</label>
+                <div id="editFilePreview" class="hidden flex items-center p-2 border border-gray-300 rounded-md">
+                  <span id="editFileName" class="text-sm text-gray-700 mr-2"></span>
+                  <button type="button" id="editRemoveFile" class="text-red-500 hover:text-red-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                <div class="mt-2">
+                  <input type="file" id="editFileAttachment" class="hidden" accept="image/*,.pdf,.doc,.docx">
+                  <button type="button" onclick="document.getElementById('editFileAttachment').click()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500">
+                    Choose File
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="mt-6 flex justify-end space-x-3">
+              <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500">
+                Cancel
+              </button>
+              <button type="submit" class="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500">
+                Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast container -->
+    <div id="toastContainer"></div>
+
+    <script>
+      // Include jwt library for token decoding
+      const jwt = {
+        decode: function (token) {
+          try {
+            const base64Url = token.split(".")[1];
+            const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+            const jsonPayload = decodeURIComponent(
+              atob(base64)
+                .split("")
+                .map(function (c) {
+                  return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+                })
+                .join("")
+            );
+            return JSON.parse(jsonPayload);
+          } catch (e) {
+            console.error("Error decoding token:", e);
+            return null;
+          }
+        },
+      };
+
+      // Debug token function
+      function debugToken() {
+        const token = localStorage.getItem("token");
+        console.log("Token from localStorage:", token);
+
+        if (token) {
+          try {
+            // Decode token without verification to see its contents
+            const decoded = jwt.decode(token);
+            console.log("Decoded token:", decoded);
+          } catch (e) {
+            console.error("Error decoding token:", e);
+          }
+        } else {
+          console.log("No token found in localStorage");
+        }
+      }
+
+      // Get token function
+      function getToken() {
+        return localStorage.getItem("token");
+      }
+
+      // DOM Elements
+      const elements = {
+        uploadDataTab: document.getElementById("uploadDataTab"),
+        broadcastMessageTab: document.getElementById("broadcastMessageTab"),
+        uploadDataSection: document.getElementById("uploadDataSection"),
+        broadcastMessageSection: document.getElementById("broadcastMessageSection"),
+        ssUserName: document.getElementById("ssUserName"),
+        vehicleTypeSelect: document.getElementById("vehicleTypeSelect"),
+        excelFile: document.getElementById("excelFile"),
+        fileName: document.getElementById("fileName"),
+        combinedForm: document.getElementById("combinedForm"),
+        submitButton: document.getElementById("submit-button"),
+        progressContainer: document.getElementById("progress-container"),
+        progressBar: document.getElementById("progress-bar"),
+        progressPercentage: document.getElementById("progress-percentage"),
+        progressStatus: document.getElementById("progress-status"),
+        processedRows: document.getElementById("processed-rows"),
+        totalRows: document.getElementById("total-rows"),
+        progressTime: document.getElementById("progress-time"),
+        historyContainer: document.getElementById("historyContainer"),
+        historyFilterSelect: document.getElementById("historyFilterSelect"),
+        refreshHistoryBtn: document.getElementById("refreshHistoryBtn"),
+        fileAttachment: document.getElementById("fileAttachment"),
+        fileAttachmentDropZone: document.getElementById("fileAttachmentDropZone"),
+        fileAttachmentText: document.getElementById("fileAttachmentText"),
+        editFileInput: document.getElementById("editFileAttachment"),
+        editFilePreview: document.getElementById("editFilePreview"),
+        editFileName: document.getElementById("editFileName"),
+        editRemoveFileBtn: document.getElementById("editRemoveFile"),
+        currentFileAttachment: document.getElementById("currentFileAttachment"),
+        currentFileName: document.getElementById("currentFileName"),
+        currentFileLink: document.getElementById("currentFileLink"),
+      };
+
+      // Initialize page
+      function init() {
+        setupEventListeners();
+        loadUserData();
+        checkForOngoingUpload();
+        loadNotifications();
+      }
+
+      // Set up all event listeners
+      function setupEventListeners() {
+        // Tab switching
+        elements.uploadDataTab.addEventListener("click", () => {
+          elements.uploadDataTab.classList.add("active");
+          elements.broadcastMessageTab.classList.remove("active");
+          elements.uploadDataSection.classList.remove("hidden");
+          elements.broadcastMessageSection.classList.add("hidden");
+        });
+
+        elements.broadcastMessageTab.addEventListener("click", () => {
+          elements.broadcastMessageTab.classList.add("active");
+          elements.uploadDataTab.classList.remove("active");
+          elements.broadcastMessageSection.classList.remove("hidden");
+          elements.uploadDataSection.classList.add("hidden");
+          // Load notifications when switching to this tab
+          loadNotifications();
+        });
+
+        // File input change for Excel file
+        elements.excelFile.addEventListener("change", handleFileChange);
+
+        // File attachment drag and drop
+        elements.fileAttachmentDropZone.addEventListener("click", () => {
+          elements.fileAttachment.click();
+        });
+
+        elements.fileAttachmentDropZone.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          elements.fileAttachmentDropZone.classList.add("border-orange-400", "bg-orange-50");
+        });
+
+        elements.fileAttachmentDropZone.addEventListener("dragleave", () => {
+          elements.fileAttachmentDropZone.classList.remove("border-orange-400", "bg-orange-50");
+        });
+
+        elements.fileAttachmentDropZone.addEventListener("drop", (e) => {
+          e.preventDefault();
+          elements.fileAttachmentDropZone.classList.remove("border-orange-400", "bg-orange-50");
+          
+          if (e.dataTransfer.files.length) {
+            elements.fileAttachment.files = e.dataTransfer.files;
+            handleNotificationFileChange();
+          }
+        });
+
+        elements.fileAttachment.addEventListener("change", handleNotificationFileChange);
+
+        // Form submission
+        elements.combinedForm.addEventListener("submit", handleCombinedFormSubmit);
+
+        // History filtering and refresh
+        elements.historyFilterSelect.addEventListener("change", loadUploadHistory);
+        elements.refreshHistoryBtn.addEventListener("click", loadUploadHistory);
+
+        // Edit file input change
+        elements.editFileInput.addEventListener("change", function (e) {
+          if (e.target.files.length > 0) {
+            const file = e.target.files[0];
+            elements.editFileName.textContent = file.name;
+            elements.editFilePreview.classList.remove("hidden");
+          } else {
+            elements.editFilePreview.classList.add("hidden");
+          }
+        });
+
+        // Edit remove file button
+        elements.editRemoveFileBtn.addEventListener("click", function () {
+          elements.editFileInput.value = "";
+          elements.editFilePreview.classList.add("hidden");
+        });
+
+        // Edit notification form submission
+        document.getElementById("editNotificationForm").addEventListener("submit", handleEditNotificationSubmit);
+
+        // Search and filter inputs
+        document.getElementById("searchQuery").addEventListener("input", applyFilters);
+        document.getElementById("filterStatus").addEventListener("change", applyFilters);
+        document.getElementById("filterPriority").addEventListener("change", applyFilters);
+        document.getElementById("refresh-history-btn").addEventListener("click", loadNotifications);
+      }
+
+      // Load user data from localStorage
+      function loadUserData() {
+        try {
+          const userData = JSON.parse(localStorage.getItem("userData"));
+          if (userData && userData.username) {
+            elements.ssUserName.textContent = userData.username;
+          }
+        } catch (e) {
+          console.error("Error parsing user data:", e);
+        }
+      }
+
+      // Check for ongoing upload from localStorage
+      function checkForOngoingUpload() {
+        try {
+          const ongoingUpload = JSON.parse(localStorage.getItem("ongoingUpload"));
+          if (ongoingUpload && ongoingUpload.jobId) {
+            showProgressBar();
+            elements.submitButton.disabled = true;
+
+            // Update progress UI with stored data
+            elements.totalRows.textContent = ongoingUpload.totalRows;
+            elements.progressBar.style.width = `${ongoingUpload.progressPercentage}%`;
+            elements.progressPercentage.textContent = `${ongoingUpload.progressPercentage.toFixed(1)}%`;
+            elements.processedRows.textContent = ongoingUpload.processedRows;
+            elements.progressStatus.textContent = ongoingUpload.status === "processing" ? "Processing..." : "Completed!";
+
+            // Resume polling for job status
+            pollJobStatus(ongoingUpload.jobId);
+          }
+        } catch (e) {
+          console.error("Error checking for ongoing upload:", e);
+        }
+      }
+
+      // Handle file input change for Excel file
+      function handleFileChange(e) {
+        const fileName = e.target.files[0]?.name || "Choose a file...";
+        elements.fileName.textContent = fileName;
+      }
+
+      // Handle file input change for notification attachment
+      function handleNotificationFileChange() {
+        if (elements.fileAttachment.files.length > 0) {
+          const file = elements.fileAttachment.files[0];
+          elements.fileAttachmentText.textContent = file.name;
+          elements.fileAttachmentDropZone.classList.add("bg-green-50", "border-green-400");
+        } else {
+          elements.fileAttachmentText.textContent = "Click to upload or drag and drop";
+          elements.fileAttachmentDropZone.classList.remove("bg-green-50", "border-green-400");
+        }
+      }
+
+      // Handle combined form submission
+      async function handleCombinedFormSubmit(e) {
+        e.preventDefault();
+
+        // Get form data
+        const userData = JSON.parse(localStorage.getItem("userData"));
+        const username = userData ? userData.username : "";
+        const vehicleType = elements.vehicleTypeSelect.querySelector(".select-trigger").getAttribute("data-value");
+        const excelFile = elements.excelFile.files[0];
+        const title = document.getElementById("title").value;
+        const message = document.getElementById("message").value;
+        const isImportant = document.getElementById("isImportant").value === "true";
+        const status = document.getElementById("status").value;
+        const notificationFile = elements.fileAttachment.files[0];
+
+        if (!excelFile) {
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Please select an Excel file to upload",
+            confirmButtonText: "OK",
+          });
+          return;
+        }
+
+        // Get token for notification API
+        const token = getToken();
+
+        if (!token) {
+          Swal.fire({
+            icon: "error",
+            title: "Authentication Error",
+            text: "You are not logged in. Please login again.",
+            confirmButtonText: "OK",
+          }).then(() => {
+            window.location.href = "../login.html";
+          });
+          return;
+        }
+
+        // Show progress bar
+        showProgressBar();
+        elements.submitButton.disabled = true;
+        resetProgressUI();
+
+        try {
+          // Step 1: Upload Excel file
+          const uploadFormData = new FormData();
+          uploadFormData.append("file", excelFile);
+          uploadFormData.append("username", username);
+          uploadFormData.append("vehicle_type", vehicleType);
+
+          const uploadResponse = await fetch(
+            "http://54.251.219.44:8000/upload_excel_async",
+            {
+              method: "POST",
+              body: uploadFormData,
+            }
+          );
+
+          if (!uploadResponse.ok) {
+            throw new Error(`Upload failed: ${uploadResponse.statusText}`);
+          }
+
+          const uploadResult = await uploadResponse.json();
+          const jobId = uploadResult.job_id;
+          const totalRows = uploadResult.total_rows;
+
+          // Store upload progress in localStorage
+          localStorage.setItem(
+            "ongoingUpload",
+            JSON.stringify({
+              jobId,
+              totalRows,
+              processedRows: 0,
+              progressPercentage: 0,
+              status: "processing",
+            })
+          );
+
+          // Update progress UI
+          elements.totalRows.textContent = totalRows;
+
+          // Step 2: Create notification
+          const notificationFormData = new FormData();
+          notificationFormData.append("title", title);
+          notificationFormData.append("message", message);
+          notificationFormData.append("isImportant", isImportant);
+          notificationFormData.append("status", status);
+
+          // Add file if selected
+          if (notificationFile) {
+            notificationFormData.append("fileAttachment", notificationFile);
+          }
+
+          const notificationResponse = await fetch(
+            "https://leadsgenerations.in/noti/api/notifications",
+            {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+              body: notificationFormData,
+            }
+          );
+
+          if (!notificationResponse.ok) {
+            // If notification creation fails, we still continue with upload
+            console.error("Notification creation failed:", notificationResponse.statusText);
+          } else {
+            const notificationResult = await notificationResponse.json();
+            console.log("Notification created successfully:", notificationResult);
+          }
+
+          // Start polling for job status
+          pollJobStatus(jobId);
+        } catch (error) {
+          console.error("Error during submission:", error);
+          elements.submitButton.disabled = false;
+          elements.progressStatus.textContent = "Error";
+          elements.progressTime.classList.add("hidden");
+
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Failed to submit data: " + error.message,
+            confirmButtonText: "OK",
+          });
+        }
+      }
+
+      // Show progress bar
+      function showProgressBar() {
+        elements.progressContainer.classList.remove("hidden");
+      }
+
+      // Reset progress UI
+      function resetProgressUI() {
+        elements.progressBar.style.width = "0%";
+        elements.progressPercentage.textContent = "0%";
+        elements.processedRows.textContent = "0";
+        elements.progressStatus.textContent = "Processing...";
+        elements.progressTime.classList.remove("hidden");
+      }
+
+      // Poll job status
+      function pollJobStatus(jobId) {
+        const startTime = Date.now();
+        let pollInterval = setInterval(async () => {
+          try {
+            const statusResponse = await fetch(
+              `http://54.251.219.44:8000/job_status/${jobId}`
+            );
+
+            if (!statusResponse.ok) {
+              throw new Error(`Status check failed: ${statusResponse.statusText}`);
+            }
+
+            const status = await statusResponse.json();
+
+            // Update progress
+            const progressPercentage = status.progress_percentage;
+            const processedRows = status.processed_rows;
+
+            elements.progressBar.style.width = `${progressPercentage}%`;
+            elements.progressPercentage.textContent = `${progressPercentage.toFixed(1)}%`;
+            elements.processedRows.textContent = processedRows;
+            elements.progressStatus.textContent = status.status === "processing" ? "Processing..." : "Completed!";
+
+            // Calculate estimated time remaining
+            if (status.status === "processing" && progressPercentage > 0) {
+              const elapsedTime = (Date.now() - startTime) / 1000; // in seconds
+              const totalEstimatedTime = elapsedTime / (progressPercentage / 100);
+              const remainingTime = totalEstimatedTime - elapsedTime;
+
+              if (remainingTime > 0) {
+                const minutes = Math.floor(remainingTime / 60);
+                const seconds = Math.floor(remainingTime % 60);
+                elements.progressTime.textContent = `Time remaining: ${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+              }
+            } else {
+              elements.progressTime.classList.add("hidden");
+            }
+
+            // Update localStorage
+            const ongoingUpload = JSON.parse(localStorage.getItem("ongoingUpload")) || {};
+            ongoingUpload.processedRows = processedRows;
+            ongoingUpload.progressPercentage = progressPercentage;
+            ongoingUpload.status = status.status;
+            localStorage.setItem("ongoingUpload", JSON.stringify(ongoingUpload));
+
+            // Check if job is complete
+            if (status.status !== "processing") {
+              clearInterval(pollInterval);
+              elements.submitButton.disabled = false;
+
+              // Clear localStorage when complete
+              localStorage.removeItem("ongoingUpload");
+
+              // Show success message
+              if (status.status === "completed") {
+                Swal.fire({
+                  icon: "success",
+                  title: "Success!",
+                  text: "File uploaded and notification created successfully!",
+                  confirmButtonText: "OK",
+                }).then(() => {
+                  // Reset form
+                  elements.combinedForm.reset();
+                  elements.fileAttachmentText.textContent = "Click to upload or drag and drop";
+                  elements.fileAttachmentDropZone.classList.remove("bg-green-50", "border-green-400");
+
+                  // Refresh notifications list
+                  loadNotifications();
+                });
+              } else {
+                Swal.fire({
+                  icon: "info",
+                  title: "Upload Complete",
+                  text: "Upload completed with status: " + status.status,
+                  confirmButtonText: "OK",
+                });
+              }
+            }
+          } catch (error) {
+            console.error("Error checking job status:", error);
+            clearInterval(pollInterval);
+            elements.submitButton.disabled = false;
+            elements.progressStatus.textContent = "Error";
+            elements.progressTime.classList.add("hidden");
+
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: "Error checking upload status: " + error.message,
+              confirmButtonText: "OK",
+            });
+          }
+        }, 2000); // Poll every 2 seconds
+      }
+
+      // Load upload history
+      async function loadUploadHistory() {
+        const vehicleType = elements.historyFilterSelect.querySelector(".select-trigger").getAttribute("data-value");
+
+        // Show loading state
+        elements.historyContainer.innerHTML = `
+          <div class="text-center py-12 bg-gray-50 rounded-xl border border-gray-100">
+            <div class="inline-block animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-orange-500"></div>
+            <p class="mt-4 text-gray-600 font-medium">Loading upload history...</p>
+          </div>
+        `;
+
+        try {
+          // Prepare vehicle types array
+          const vehicleTypes = vehicleType === "all" 
+            ? ["motor_car", "motor_tw", "motor_gcv", "motor_3wh", "motor_bus", "motor_taxi", "motor_miscd"]
+            : [vehicleType];
+
+          const response = await fetch(
+            "http://54.251.219.44:8000/list_files_by_vehicles",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                vehicle_types: vehicleTypes,
+                limit: 20,
+              }),
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error(`Failed to fetch history: ${response.statusText}`);
+          }
+
+          const historyData = await response.json();
+          displayUploadHistory(historyData);
+        } catch (error) {
+          console.error("Error fetching upload history:", error);
+          elements.historyContainer.innerHTML = `
+            <div class="text-center py-12 bg-red-50 rounded-xl border border-red-100">
+              <svg class="mx-auto h-16 w-16 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+              </svg>
+              <p class="mt-4 text-lg font-medium text-red-800">Error loading upload history</p>
+              <p class="mt-1 text-red-600 max-w-md mx-auto">${error.message}</p>
+            </div>
+          `;
+        }
+      }
+
+      // Display upload history
+      function displayUploadHistory(historyData) {
+        // Check if there's any history data
+        const hasHistory = Object.values(historyData).some(files => files.length > 0);
+
+        if (!hasHistory) {
+          elements.historyContainer.innerHTML = `
+            <div class="text-center py-12 bg-gray-50 rounded-xl border border-gray-100">
+              <svg class="mx-auto h-16 w-16 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+              <p class="mt-4 text-lg font-medium text-gray-700">No upload history found</p>
+              <p class="mt-1 text-gray-600 max-w-md mx-auto">Upload your first vehicle data file to see it appear here</p>
+            </div>
+          `;
+          return;
+        }
+
+        let html = '<div class="bg-white rounded-2xl shadow-lg overflow-hidden">';
+        html += '<table class="w-full border-collapse">';
+        html += '<thead class="bg-orange-500">';
+        html += '<tr>';
+        html += '<th class="text-left px-6 py-4 text-white font-semibold">File Name</th>';
+        html += '<th class="text-left px-6 py-4 text-white font-semibold">Uploaded By</th>';
+        html += '<th class="text-left px-6 py-4 text-white font-semibold">Date & Time</th>';
+        html += '<th class="text-center px-6 py-4 text-white font-semibold">Actions</th>';
+        html += '</tr>';
+        html += '</thead>';
+        html += '<tbody class="divide-y divide-gray-200">';
+
+        // Vehicle type display names
+        const vehicleTypeNames = {
+          motor_car: "Car",
+          motor_tw: "Two Wheeler",
+          motor_gcv: "GCV",
+          motor_3wh: "3Wh",
+          motor_bus: "Bus",
+          motor_taxi: "Taxi",
+          motor_miscd: "Misc.D",
+        };
+
+        // Group by vehicle type
+        Object.entries(historyData).forEach(([vehicleType, files]) => {
+          if (files.length === 0) return;
+
+          files.forEach((file) => {
+            html += `
+              <tr class="hover:bg-gray-50 transition">
+                <td class="px-6 py-4 text-gray-700">
+                  ${file.file_name}
+                </td>
+                <td class="px-6 py-4 text-gray-700">
+                  ${file.Updated_by}
+                </td>
+                <td class="px-6 py-4 text-gray-600">
+                  ${file.Uploaded_at}
+                </td>
+                <td class="px-6 py-4 text-center">
+                  <a href="${file.download_link}" target="_blank"
+                    class="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium px-5 py-2 rounded-full transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
+                      viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
+                    </svg>
+                    Download
+                  </a>
+                </td>
+              </tr>
+            `;
+          });
+        });
+
+        html += '</tbody>';
+        html += '</table>';
+        html += '</div>';
+
+        elements.historyContainer.innerHTML = html;
+      }
+
+      // Load notifications from server
+      async function loadNotifications() {
+        const token = getToken();
+
+        if (!token) {
+          console.error("Authentication token not found");
+          return;
+        }
+
+        try {
+          const tableBody = document.getElementById("notificationsTableBody");
+          tableBody.innerHTML = `
+            <tr>
+              <td colspan="6" class="text-center py-12 bg-gray-50">
+                <div class="inline-block animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-orange-500"></div>
+                <p class="mt-4 text-gray-600 font-medium">Loading notifications...</p>
+              </td>
+            </tr>
+          `;
+
+          const response = await fetch(
+            "https://leadsgenerations.in/noti/api/notifications",
+            {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          if (response.ok) {
+            const notifications = await response.json();
+
+            // Store all notifications for filtering
+            window.allNotifications = notifications;
+
+            // Apply current filters
+            applyFilters();
+          } else {
+            console.error("Failed to load notifications:", response.status);
+            const tableBody = document.getElementById("notificationsTableBody");
+            tableBody.innerHTML = `
+              <tr>
+                <td colspan="6" class="text-center py-12 bg-red-50">
+                  <svg class="mx-auto h-16 w-16 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                  </svg>
+                  <p class="mt-4 text-lg font-medium text-red-800">Error loading notifications</p>
+                  <p class="mt-1 text-red-600 max-w-md mx-auto">Failed to load notifications. Please try again.</p>
+                </td>
+              </tr>
+            `;
+          }
+        } catch (error) {
+          console.error("Error loading notifications:", error);
+          const tableBody = document.getElementById("notificationsTableBody");
+          tableBody.innerHTML = `
+            <tr>
+              <td colspan="6" class="text-center py-12 bg-red-50">
+                <svg class="mx-auto h-16 w-16 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+                <p class="mt-4 text-lg font-medium text-red-800">Error loading notifications</p>
+                <p class="mt-1 text-red-600 max-w-md mx-auto">${error.message}</p>
+              </td>
+            </tr>
+          `;
+        }
+      }
+
+      // Apply filters to notifications
+      function applyFilters() {
+        if (!window.allNotifications) {
+          return;
+        }
+
+        const statusFilter = document.getElementById("filterStatus").value;
+        const priorityFilter = document.getElementById("filterPriority").value;
+        const searchQuery = document.getElementById("searchQuery").value.toLowerCase();
+
+        const filteredNotifications = window.allNotifications.filter(
+          (notification) => {
+            // Status filter
+            if (statusFilter !== "all" && notification.status !== statusFilter) {
+              return false;
+            }
+
+            // Priority filter
+            if (priorityFilter !== "all") {
+              const isImportant = notification.isImportant;
+              if (priorityFilter === "important" && !isImportant) {
+                return false;
+              }
+              if (priorityFilter === "standard" && isImportant) {
+                return false;
+              }
+            }
+
+            // Search query filter
+            if (
+              searchQuery &&
+              !notification.title.toLowerCase().includes(searchQuery) &&
+              !notification.message.toLowerCase().includes(searchQuery)
+            ) {
+              return false;
+            }
+
+            return true;
+          }
+        );
+
+        renderNotifications(filteredNotifications);
+      }
+
+      // Render notifications to table
+      function renderNotifications(notifications) {
+        const tableBody = document.getElementById("notificationsTableBody");
+
+        if (notifications.length === 0) {
+          tableBody.innerHTML = `
+            <tr>
+              <td colspan="6" class="text-center py-12 bg-gray-50">
+                <svg class="mx-auto h-16 w-16 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+                </svg>
+                <p class="mt-4 text-lg font-medium text-gray-700">No notifications found</p>
+                <p class="mt-1 text-gray-600 max-w-md mx-auto">Create your first notification to see it appear here</p>
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        // Clear table body
+        tableBody.innerHTML = "";
+
+        // Add each notification to table
+        notifications.forEach((notification) => {
+          const row = document.createElement("tr");
+
+          // Format date
+          const createdDate = new Date(notification.createdAt).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+          });
+
+          // Create priority badge
+          let priorityBadge;
+          if (notification.isImportant) {
+            priorityBadge = `
+              <span class="inline-flex items-center gap-2 bg-red-100 text-red-600 text-sm font-medium px-4 py-1.5 rounded-full">
+                <span class="w-2 h-2 bg-red-500 rounded-full"></span>
+                Important
+              </span>
+            `;
+          } else {
+            priorityBadge = `
+              <span class="inline-flex items-center gap-2 bg-green-100 text-green-600 text-sm font-medium px-4 py-1.5 rounded-full">
+                <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                Standard
+              </span>
+            `;
+          }
+
+          // Create status badge
+          let statusBadge;
+          if (notification.status === "active") {
+            statusBadge = `
+              <span class="inline-flex items-center gap-2 bg-blue-100 text-blue-600 text-sm font-medium px-4 py-1.5 rounded-full">
+                <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
+                Active
+              </span>
+            `;
+          } else {
+            statusBadge = `
+              <span class="inline-flex items-center gap-2 bg-gray-100 text-gray-600 text-sm font-medium px-4 py-1.5 rounded-full">
+                <span class="w-2 h-2 bg-gray-500 rounded-full"></span>
+                Inactive
+              </span>
+            `;
+          }
+
+          // Truncate message for table display
+          const truncatedMessage =
+            notification.message.length > 30
+              ? notification.message.substring(0, 30) + "..."
+              : notification.message;
+
+          row.innerHTML = `
+            <td class="px-6 py-4 text-gray-700">
+              ${notification.title}
+            </td>
+            <td class="px-6 py-4 text-gray-600">
+              ${truncatedMessage}
+            </td>
+            <td class="px-6 py-4">
+              ${priorityBadge}
+            </td>
+            <td class="px-6 py-4">
+              ${statusBadge}
+            </td>
+            <td class="px-6 py-4 text-gray-600">
+              ${createdDate}
+            </td>
+            <td class="px-6 py-4 text-right">
+              <div class="flex items-center justify-end gap-4">
+                <!-- View -->
+                <button onclick="viewNotification('${notification._id}')" class="text-gray-400 hover:text-gray-600 transition">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                </button>
+
+                <!-- Edit -->
+                <button onclick="editNotification('${notification._id}')" class="text-blue-500 hover:text-blue-600 transition">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+                  </svg>
+                </button>
+
+                <!-- Delete -->
+                <button onclick="deleteNotification('${notification._id}')" class="text-red-500 hover:text-red-600 transition">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7h6m2 0H7m3-4h4a1 1 0 011 1v1H9V4a1 1 0 011-1z" />
+                  </svg>
+                </button>
+              </div>
+            </td>
+          `;
+
+          tableBody.appendChild(row);
+        });
+      }
+
+      // View notification details
+      async function viewNotification(id) {
+        const token = getToken();
+
+        if (!token) {
+          Swal.fire({
+            icon: "error",
+            title: "Authentication Error",
+            text: "You are not logged in. Please login again.",
+            confirmButtonText: "OK",
+          });
+          return;
+        }
+
+        try {
+          const response = await fetch(
+            `https://leadsgenerations.in/noti/api/notifications/${id}`,
+            {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          if (response.ok) {
+            const notification = await response.json();
+
+            // Debug log to check notification data
+            console.log("Notification data:", notification);
+
+            // Populate modal with notification details
+            document.getElementById("modalNotificationTitle").textContent = notification.title;
+            document.getElementById("modalNotificationMessage").textContent = notification.message;
+
+            // Handle file attachment
+            if (notification.fileAttachment) {
+              document.getElementById("modalFileAttachmentDiv").style.display = "block";
+              document.getElementById("modalFileAttachment").href = notification.fileAttachment;
+
+              // Extract filename from URL
+              const urlParts = notification.fileAttachment.split("/");
+              const filename = urlParts[urlParts.length - 1];
+              document.getElementById("modalFileName").textContent = filename;
+            } else {
+              document.getElementById("modalFileAttachmentDiv").style.display = "none";
+            }
+
+            // Set priority badge
+            const priorityElement = document.getElementById("modalPriority");
+            if (notification.isImportant) {
+              priorityElement.textContent = "Important";
+              priorityElement.className = "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800";
+            } else {
+              priorityElement.textContent = "Standard";
+              priorityElement.className = "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800";
+            }
+
+            // Set status badge
+            const statusElement = document.getElementById("modalStatus");
+            if (notification.status === "active") {
+              statusElement.textContent = "Active";
+              statusElement.className = "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800";
+            } else {
+              statusElement.textContent = "Inactive";
+              statusElement.className = "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800";
+            }
+
+            // Format dates
+            document.getElementById("modalCreatedAt").textContent = new Date(
+              notification.createdAt
+            ).toLocaleString();
+            document.getElementById("modalUpdatedAt").textContent = new Date(
+              notification.updatedAt
+            ).toLocaleString();
+
+            // Set updatedBy
+            const updatedByElement = document.getElementById("modalUpdatedBy");
+            if (notification.updatedBy && notification.updatedBy.name) {
+              // If we have populated user data
+              const updatedByName = notification.updatedBy.name || "Unknown";
+              updatedByElement.textContent = `${updatedByName}`;
+            } else if (notification.updatedBy) {
+              // If we have only the ID (not populated)
+              updatedByElement.textContent = `User ID: ${notification.updatedBy}`;
+            } else {
+              // If updatedBy is null or undefined
+              updatedByElement.textContent = "Unknown";
+            }
+
+            // Show modal
+            document.getElementById("notificationModal").classList.remove("hidden");
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: "Failed to load notification details",
+              confirmButtonText: "OK",
+            });
+          }
+        } catch (error) {
+          console.error("Error viewing notification:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Failed to load notification details",
+            confirmButtonText: "OK",
+          });
+        }
+      }
+
+      // Edit notification
+      async function editNotification(id) {
+        const token = getToken();
+
+        if (!token) {
+          Swal.fire({
+            icon: "error",
+            title: "Authentication Error",
+            text: "You are not logged in. Please login again.",
+            confirmButtonText: "OK",
+          });
+          return;
+        }
+
+        try {
+          const response = await fetch(
+            `https://leadsgenerations.in/noti/api/notifications/${id}`,
+            {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          if (response.ok) {
+            const notification = await response.json();
+
+            // Populate edit form with notification details
+            document.getElementById("editNotificationId").value = notification._id;
+            document.getElementById("editTitle").value = notification.title;
+            document.getElementById("editMessage").value = notification.message;
+            document.getElementById("editIsImportant").value = notification.isImportant ? "true" : "false";
+            document.getElementById("editStatus").value = notification.status;
+
+            // Handle file attachment
+            if (notification.fileAttachment) {
+              elements.currentFileAttachment.classList.remove("hidden");
+              elements.currentFileLink.href = notification.fileAttachment;
+
+              // Extract filename from URL
+              const urlParts = notification.fileAttachment.split("/");
+              const filename = urlParts[urlParts.length - 1];
+              elements.currentFileName.textContent = filename;
+            } else {
+              elements.currentFileAttachment.classList.add("hidden");
+            }
+
+            // Reset file input
+            elements.editFileInput.value = "";
+            elements.editFilePreview.classList.add("hidden");
+
+            // Show edit modal
+            document.getElementById("editNotificationModal").classList.remove("hidden");
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: "Failed to load notification details",
+              confirmButtonText: "OK",
+            });
+          }
+        } catch (error) {
+          console.error("Error editing notification:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Failed to load notification details",
+            confirmButtonText: "OK",
+          });
+        }
+      }
+
+      // Handle edit notification form submission
+      async function handleEditNotificationSubmit(e) {
+        e.preventDefault();
+
+        const id = document.getElementById("editNotificationId").value;
+        const title = document.getElementById("editTitle").value;
+        const message = document.getElementById("editMessage").value;
+        const isImportant = document.getElementById("editIsImportant").value === "true";
+        const status = document.getElementById("editStatus").value;
+
+        // Use getToken function instead of localStorage
+        const token = getToken();
+
+        if (!token) {
+          Swal.fire({
+            icon: "error",
+            title: "Authentication Error",
+            text: "You are not logged in. Please login again.",
+            confirmButtonText: "OK",
+          }).then(() => {
+            window.location.href = "../login.html";
+          });
+          return;
+        }
+
+        // Create FormData for file upload
+        const formData = new FormData();
+        formData.append("title", title);
+        formData.append("message", message);
+        formData.append("isImportant", isImportant);
+        formData.append("status", status);
+
+        // Add file if selected
+        if (elements.editFileInput.files.length > 0) {
+          formData.append("fileAttachment", elements.editFileInput.files[0]);
+        }
+
+        try {
+          // Show loading state
+          Swal.fire({
+            title: "Updating notification...",
+            text: "Please wait",
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading();
+            },
+          });
+
+          const response = await fetch(
+            `https://leadsgenerations.in/noti/api/notifications/${id}`,
+            {
+              method: "PUT",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+              body: formData,
+            }
+          );
+
+          const data = await response.json();
+
+          if (response.ok) {
+            Swal.fire({
+              icon: "success",
+              title: "Success!",
+              text: data.message || "Notification updated successfully",
+              confirmButtonText: "OK",
+            });
+
+            // Close modal
+            closeEditModal();
+
+            // Refresh notifications list
+            loadNotifications();
+          } else {
+            // Handle unauthorized error specifically
+            if (response.status === 401) {
+              Swal.fire({
+                icon: "error",
+                title: "Session Expired",
+                text: "Your session has expired. Please login again.",
+                confirmButtonText: "OK",
+              }).then(() => {
+                // Clear token and redirect to login
+                localStorage.removeItem("token");
+                localStorage.removeItem("userData");
+                window.location.href = "../login.html";
+              });
+            } else {
+              Swal.fire({
+                icon: "error",
+                title: "Error!",
+                text: data.message || "Failed to update notification",
+                confirmButtonText: "OK",
+              });
+            }
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Error!",
+            text: "Failed to update notification. Please try again.",
+            confirmButtonText: "OK",
+          });
+        }
+      }
+
+      // Delete notification
+      function deleteNotification(id) {
+        Swal.fire({
+          title: "Are you sure?",
+          text: "You won't be able to revert this!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, delete it!",
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            const token = getToken();
+
+            if (!token) {
+              Swal.fire({
+                icon: "error",
+                title: "Authentication Error",
+                text: "You are not logged in. Please login again.",
+                confirmButtonText: "OK",
+              });
+              return;
+            }
+
+            try {
+              const response = await fetch(
+                `https://leadsgenerations.in/noti/api/notifications/${id}`,
+                {
+                  method: "DELETE",
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                }
+              );
+
+              if (response.ok) {
+                Swal.fire({
+                  icon: "success",
+                  title: "Deleted!",
+                  text: "Notification has been deleted.",
+                  confirmButtonText: "OK",
+                });
+
+                // Refresh notifications list
+                loadNotifications();
+              } else {
+                Swal.fire({
+                  icon: "error",
+                  title: "Error",
+                  text: "Failed to delete notification",
+                  confirmButtonText: "OK",
+                });
+              }
+            } catch (error) {
+              console.error("Error deleting notification:", error);
+              Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "Failed to delete notification",
+                confirmButtonText: "OK",
+              });
+            }
+          }
+        });
+      }
+
+      // Close view modal
+      function closeModal() {
+        document.getElementById("notificationModal").classList.add("hidden");
+      }
+
+      // Close edit modal
+      function closeEditModal() {
+        document.getElementById("editNotificationModal").classList.add("hidden");
+      }
+
+      // Initialize custom select dropdowns
+      function initializeCustomSelect(selectElement) {
+        const trigger = selectElement.querySelector(".select-trigger");
+        const options = selectElement.querySelector(".select-options");
+        const optionItems = selectElement.querySelectorAll(".select-option");
+
+        // Toggle dropdown
+        trigger.addEventListener("click", function (e) {
+          e.stopPropagation();
+          
+          const isActive = trigger.classList.contains("active");
+          
+          // Close all other dropdowns
+          document.querySelectorAll(".select-trigger.active").forEach(activeTrigger => {
+            if (activeTrigger !== trigger) {
+              activeTrigger.classList.remove("active");
+              activeTrigger.nextElementSibling.classList.remove("show");
+            }
+          });
+          
+          // Toggle current dropdown
+          trigger.classList.toggle("active");
+          options.classList.toggle("show");
+        });
+
+        // Select option
+        optionItems.forEach(option => {
+          option.addEventListener("click", function (e) {
+            e.stopPropagation();
+            const value = this.getAttribute("data-value");
+            const text = this.textContent;
+            
+            // Update trigger text and value
+            trigger.querySelector("span").textContent = text;
+            trigger.setAttribute("data-value", value);
+            
+            // Update selected state
+            optionItems.forEach(item => item.classList.remove("selected"));
+            this.classList.add("selected");
+            
+            // Close dropdown
+            trigger.classList.remove("active");
+            options.classList.remove("show");
+            
+            // Remove gray color from text
+            trigger.querySelector("span").classList.remove("text-gray-400");
+            
+            // Trigger change event for history filter
+            if (selectElement.id === "historyFilterSelect") {
+              loadUploadHistory(value);
+              // Update the title with the selected vehicle type
+              document.getElementById("historyTitle").textContent = `Upload History - ${text}`;
+            }
+          });
+        });
+      }
+
+      // Close dropdowns when clicking outside
+      document.addEventListener("click", function (e) {
+        document.querySelectorAll(".select-trigger.active").forEach(trigger => {
+          trigger.classList.remove("active");
+          trigger.nextElementSibling.classList.remove("show");
+        });
+      });
+
+      // Initialize all custom selects
+      document.querySelectorAll(".custom-select:not([aria-disabled])").forEach(select => {
+        initializeCustomSelect(select);
+      });
+
+      // Initialize application
+      init();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,35 @@
+[2025-11-12T12:29:57.274Z] Abhishek Badetiya (8306786793) to Abhishek Sain (6367845520): hi
+[2025-11-12T13:07:35.318Z] Abhishek Sain (6367845520) to User (8306786793): 
+    <div class="insurance-rates-kv">
+      <div class="font-semibold mb-2">📊 Insurance Rates (1 rate)</div>
+      <div class="rates-toggle-container">
+        <button id="toggleAllRates" class="text-blue-600 text-sm font-medium mb-2">
+          <i class="fas fa-chevron-down mr-1"></i> Show All Rates
+        </button>
+        <div id="ratesContainer" class="hidden">
+  
+      <div class="rate-item mb-3 p-3 border rounded-lg">
+        <div class="flex justify-between items-center mb-2 cursor-pointer rate-header" data-index="0">
+          <div class="font-medium">Universal Sompo General Insurance Company Limited - Private Car Comprehensive</div>
+          <i class="fas fa-chevron-down text-gray-500 rate-chevron"></i>
+        </div>
+        <div class="rate-details hidden" data-index="0">
+          <div class="grid grid-cols-2 gap-2 text-sm">
+            <div><span class="font-medium">RTO:</span> AP</div>
+            <div><span class="font-medium">OD:</span> 29</div>
+            <div><span class="font-medium">TP:</span> 0</div>
+            <div><span class="font-medium">NET:</span> 0</div>
+            <div><span class="font-medium">Policy Type:</span> New</div>
+            <div><span class="font-medium">CC Range:</span> 700-5000</div>
+            <div><span class="font-medium">Age Range:</span> N/A</div>
+            <div><span class="font-medium">Fuel Type:</span> Petrol,Diesel,CNG,LPG,Electric</div>
+            <div><span class="font-medium">NCB:</span> Without NCB</div>
+            <div><span class="font-medium">Remarks:</span> No</div>
+          </div>
+        </div>
+      </div>
+    
+        </div>
+      </div>
+    </div>
+  

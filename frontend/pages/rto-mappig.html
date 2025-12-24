@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RTO Mapping</title>
+    <!-- Include the same styles as in header.html -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- Google Fonts - Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet" />
+    <!-- Include the header loader script -->
+    <script src="/assets/js/main.js"></script>
+    <script src="/assets/js/auth.js"></script>
+    <style>
+      .responsive-text-filename {
+        font-size: clamp(0.8rem, 0.75rem + 0.25vw, 0.95rem);
+      }
+      /* Notification styles */
+      .notification {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        padding: 16px 24px;
+        border-radius: 8px;
+        color: white;
+        font-weight: 500;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        transform: translateY(100px);
+        opacity: 0;
+        transition: all 0.3s ease-out;
+      }
+
+      .notification.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      .notification.success {
+        background-color: #10b981;
+      }
+
+      .notification.error {
+        background-color: #ef4444;
+      }
+
+      .notification i {
+        margin-right: 10px;
+      }
+
+      /* Responsive font sizes */
+      .responsive-text-xs {
+        font-size: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+      }
+
+      .responsive-text-sm {
+        font-size: clamp(0.875rem, 0.8rem + 0.375vw, 1rem);
+      }
+
+      .responsive-text-base {
+        font-size: clamp(1rem, 0.9rem + 0.5vw, 1.125rem);
+      }
+
+      .responsive-text-lg {
+        font-size: clamp(1.125rem, 1rem + 0.625vw, 1.25rem);
+      }
+
+      .responsive-text-xl {
+        font-size: clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem);
+      }
+
+      .responsive-text-2xl {
+        font-size: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+      }
+
+      /* Loader overlay styles */
+      .loader-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+      }
+
+      /* Mobile-specific styles */
+      @media (max-width: 768px) {
+        .notification {
+          left: 1rem !important;
+          right: 1rem !important;
+          width: auto;
+          max-width: calc(100% - 2rem);
+        }
+
+        /* Orange filter for download icon */
+        .download-icon-orange {
+          filter: brightness(0) saturate(100%) invert(51%) sepia(88%)
+            saturate(1845%) hue-rotate(3deg) brightness(102%) contrast(101%);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Loader overlay -->
+    <div id="loadingOverlay" class="loader-overlay">
+      <div class="flex flex-col items-center">
+        <div
+          class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
+        <p class="mt-4 text-gray-600 responsive-text-base">Loading files...</p>
+      </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+      <!-- Header -->
+      <header class="mb-3">
+        <h1
+          class="responsive-text-xl md:responsive-text-2xl font-semibold text-gray-800 mb-2">
+          RTO Mapping
+        </h1>
+      </header>
+
+      <!-- Desktop File Table -->
+      <div
+        id="fileTableContainer"
+        class="bg-white rounded-lg shadow-md overflow-hidden hidden md:block">
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead class="bg-orange-500 border-b border-gray-200">
+              <tr>
+                <th
+                  class="px-6 py-3 text-left responsive-text-lg font-medium text-white tracking-wider">
+                  File Name
+                </th>
+                <th
+                  class="px-6 py-3 text-right responsive-text-lg font-medium text-white tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody id="fileTableBody" class="bg-white divide-y divide-gray-200">
+              <!-- File rows will be dynamically added here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Mobile File List (Card Layout) -->
+      <div id="mobileFileContainer" class="md:hidden">
+        <div
+          class="max-w-3xl mx-auto bg-white rounded-3xl shadow-[0_4px_25px_rgba(0,0,0,0.15)] overflow-hidden">
+          <!-- Header -->
+          <div
+            class="bg-orange-500 text-white px-6 py-4 flex justify-between items-center">
+            <h2 class="responsive-text-lg font-semibold">File Name</h2>
+            <h2 class="responsive-text-lg font-semibold">Actions</h2>
+          </div>
+
+          <!-- Rows -->
+          <div id="mobileFileList" class="divide-y divide-gray-200">
+            <!-- File rows will be dynamically added here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Error message -->
+      <div
+        id="errorMessage"
+        class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded hidden">
+        <p class="font-bold">Error</p>
+        <p id="errorText" class="responsive-text-sm">
+          Failed to load files. Please try again later.
+        </p>
+      </div>
+    </div>
+
+    <!-- Notification container -->
+    <div id="notificationContainer"></div>
+
+    <script>
+      // Function to show notifications
+      function showNotification(message, type = "success") {
+        const notificationContainer = document.getElementById(
+          "notificationContainer"
+        );
+
+        // Create notification element
+        const notification = document.createElement("div");
+        notification.className = `notification ${type}`;
+
+        // Add icon based on type
+        const icon =
+          type === "success" ? "fa-check-circle" : "fa-exclamation-circle";
+
+        notification.innerHTML = `
+          <i class="fas ${icon}"></i>
+          <span>${message}</span>
+        `;
+
+        // Add to container
+        notificationContainer.appendChild(notification);
+
+        // Show notification with animation
+        setTimeout(() => {
+          notification.classList.add("show");
+        }, 10);
+
+        // Hide and remove after delay
+        const hideDelay = type === "success" ? 3000 : 5000;
+        setTimeout(() => {
+          notification.classList.remove("show");
+          setTimeout(() => {
+            notificationContainer.removeChild(notification);
+          }, 300);
+        }, hideDelay);
+      }
+
+      // Function to fetch and display files
+      async function fetchFiles() {
+        try {
+          const response = await fetch(
+            "https://grid.leadsgenerations.in/map/list"
+          );
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          const data = await response.json();
+
+          // Hide loading overlay
+          document.getElementById("loadingOverlay").style.display = "none";
+
+          // Check screen size and show appropriate container
+          const isMobile = window.innerWidth < 768; // 768px is the 'md' breakpoint in Tailwind
+
+          if (isMobile) {
+            // Show only mobile container
+            document
+              .getElementById("mobileFileContainer")
+              .classList.remove("hidden");
+            document
+              .getElementById("fileTableContainer")
+              .classList.add("hidden");
+          } else {
+            // Show only desktop container
+            document
+              .getElementById("fileTableContainer")
+              .classList.remove("hidden");
+            document
+              .getElementById("mobileFileContainer")
+              .classList.add("hidden");
+          }
+
+          // Populate the desktop table with files
+          const tableBody = document.getElementById("fileTableBody");
+          tableBody.innerHTML = ""; // Clear existing content
+
+          // Populate the mobile list with files
+          const mobileFileList = document.getElementById("mobileFileList");
+          mobileFileList.innerHTML = ""; // Clear existing content
+
+          data.files.forEach((file) => {
+            // Skip log files if needed (optional)
+            if (file.includes("logs/")) return;
+
+            // Create desktop table row
+            const row = document.createElement("tr");
+            row.className = "hover:bg-gray-50 transition-colors";
+
+            row.innerHTML = `
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 mr-3 bg-orange-100 rounded-full flex items-center justify-center">
+                    <img src="/assets/img/file icon.svg" class="w-8 h-8" />
+                  </div>
+                  <p class="text-gray-700 font-medium responsive-text-filename">${file}</p>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-right">
+                <button
+                  data-file="${file}"
+                  class="download-btn inline-flex items-center px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-small rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 responsive-text-sm">
+                  <img
+                    src="/assets/img/download icon.svg"
+                    alt=""
+                    class="mr-2" />
+                  Download
+                </button>
+              </td>
+            `;
+
+            tableBody.appendChild(row);
+
+            // Create mobile card row
+            const mobileRow = document.createElement("div");
+            mobileRow.className = "flex items-center justify-between px-6 py-4";
+
+            mobileRow.innerHTML = `
+              <div class="flex items-center space-x-4">
+                <div class="rounded-full bg-orange-100">
+                  <img src="/assets/img/file icon.svg" class="w-7 h-7" />
+                </div>
+                <p class="text-gray-700 font-medium responsive-text-filename">${file}</p>
+              </div>
+              <button data-file="${file}" class="download-btn">
+                <img src="/assets/img/download icon.svg" class="w-6 h-6 download-icon-orange" />
+              </button>
+            `;
+
+            mobileFileList.appendChild(mobileRow);
+          });
+
+          // Add download functionality to buttons (both desktop and mobile)
+          document.querySelectorAll(".download-btn").forEach((button) => {
+            button.addEventListener("click", async function () {
+              const filename = this.getAttribute("data-file");
+
+              try {
+                // Show download started notification
+                showNotification(`Download started for ${filename}`, "success");
+
+                // Get download URL
+                const response = await fetch(
+                  `https://grid.leadsgenerations.in/map/download-url?filename=${encodeURIComponent(
+                    filename
+                  )}`
+                );
+
+                if (!response.ok) {
+                  throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const downloadUrl = data.url;
+
+                // Fetch the file as a blob to track download progress
+                const fileResponse = await fetch(downloadUrl);
+                if (!fileResponse.ok) {
+                  throw new Error(`HTTP error! Status: ${fileResponse.status}`);
+                }
+
+                // Get the blob
+                const blob = await fileResponse.blob();
+
+                // Create an object URL for the blob
+                const blobUrl = window.URL.createObjectURL(blob);
+
+                // Trigger download
+                const link = document.createElement("a");
+                link.href = blobUrl;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                // Clean up the object URL
+                window.URL.revokeObjectURL(blobUrl);
+
+                console.log(`Downloaded ${filename}...`);
+
+                // Show download completed notification now that the file is fully downloaded
+                showNotification(
+                  `Download completed for ${filename}`,
+                  "success"
+                );
+              } catch (error) {
+                console.error("Error downloading file:", error);
+
+                // Show error notification
+                showNotification(
+                  `Failed to download ${filename}. Please try again.`,
+                  "error"
+                );
+              }
+            });
+          });
+        } catch (error) {
+          console.error("Error fetching files:", error);
+
+          // Hide loading overlay
+          document.getElementById("loadingOverlay").style.display = "none";
+
+          // Show error message
+          document.getElementById("errorMessage").classList.remove("hidden");
+          document.getElementById(
+            "errorText"
+          ).textContent = `Failed to load files: ${error.message}`;
+        }
+      }
+
+      // Fetch files when page loads
+      document.addEventListener("DOMContentLoaded", fetchFiles);
+
+      // Handle window resize to ensure correct view is shown
+      window.addEventListener("resize", function () {
+        const isMobile = window.innerWidth < 768; // 768px is the 'md' breakpoint in Tailwind
+
+        if (isMobile) {
+          // Show only mobile container
+          document
+            .getElementById("mobileFileContainer")
+            .classList.remove("hidden");
+          document.getElementById("fileTableContainer").classList.add("hidden");
+        } else {
+          // Show only desktop container
+          document
+            .getElementById("fileTableContainer")
+            .classList.remove("hidden");
+          document
+            .getElementById("mobileFileContainer")
+            .classList.add("hidden");
+        }
+      });
+    </script>
+  </body>
+</html>

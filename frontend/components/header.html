@@ -1,0 +1,275 @@
+<!-- Header Component with Support Dropdown -->
+<header
+  class="bg-white shadow-[0_4px_10px_rgba(255,123,0,0.2)] rounded-lg h-[72px] flex items-center justify-between px-4 md:px-6 lg:px-8">
+  <!-- Left side: User info -->
+  <div class="flex items-center relative">
+    <!-- Circular avatar with orange background -->
+    <div
+      class="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden flex items-center justify-center cursor-pointer"
+      id="profile-toggle">
+      <img
+        src="/assets/img/profile pic.svg"
+        alt="Profile"
+        class="w-full h-full object-cover" />
+    </div>
+
+    <!-- User name and username -->
+    <div class="ml-2 sm:ml-4">
+      <h2
+        class="text-base sm:text-lg font-semibold text-gray-800"
+        id="name"></h2>
+      <p class="text-xs sm:text-sm text-gray-600" id="username"></p>
+    </div>
+
+    <!-- Dropdown Menu -->
+    <div
+      id="profile-dropdown"
+      class="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-lg z-50 hidden">
+      <div class="py-1">
+        <!-- Home -->
+        <a
+          href="/pages/home.html"
+          class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+          <img
+            src="/assets/img/home icon.svg"
+            alt="Home"
+            class="w-5 h-5 ml-1" />
+          <span>Home</span>
+        </a>
+        <!-- RTO Mapping -->
+        <a
+          href="rto-mappig.html"
+          class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+          <img
+            src="/assets/img/rto mapping profile icon.svg"
+            alt="RTO Mapping"
+            class="w-5 h-5 ml-1" />
+          <span>RTO Mapping</span>
+        </a>
+        <!-- Grid Notification -->
+        <a
+          href="grid-notification.html"
+          class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hidden"
+          id="grid-notification-link">
+          <img
+            src="/assets/img/bell icon.svg"
+            alt="RTO Mapping"
+            class="w-5 h-5 ml-1" />
+          <span>Grid Notification</span>
+        </a>
+        <!-- Broadcast Message -->
+        <a
+          href="broadcast-message.html"
+          class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hidden"
+          id="broadcast-message-link">
+          <img
+            src="/assets/img/header-broadcast-message.svg"
+            alt="RTO Mapping"
+            class="w-5 h-5 ml-1"
+            style="color: black" />
+          <span>Broadcast Message</span>
+        </a>
+        <hr class="my-1" />
+        <a
+          onclick="logout()"
+          href="#"
+          class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 flex items-center">
+          <i class="fas fa-sign-out-alt mr-3"></i>
+          Logout
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right side: Icons -->
+  <div class="flex items-center space-x-3 sm:space-x-4">
+    <!-- Message icon -->
+    <!-- <button class="text-gray-600 hover:text-orange-500 transition-colors p-1">
+      <img
+        src="/assets/img/chat icon.svg"
+        alt="Messages"
+        class="w-5 h-5 sm:w-6 sm:h-6" />
+    </button> -->
+
+    <!-- Headphones icon with dropdown -->
+    <div class="relative">
+      <button
+        class="text-gray-600 hover:text-orange-500 transition-colors p-1"
+        id="support-toggle">
+        <img
+          src="/assets/img/headphone icon.svg"
+          alt="Support"
+          class="w-5 h-5 sm:w-6 sm:h-6" />
+      </button>
+
+      <!-- Support Dropdown - Responsive positioning -->
+      <div
+        id="support-dropdown"
+        class="fixed shadow-[0px_6px_25px_0px_#B4B4B480] top-[155px] left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 bg-white rounded-lg z-50 hidden md:absolute md:top-full md:right-0 md:mt-2 md:left-auto md:transform-none md:translate-x-0 md:translate-y-0">
+        <div class="">
+          <!-- Grid Layout for Support Options in a single row -->
+          <div class="grid grid-cols-4 gap-2">
+            <!-- Support Item 1 -->
+            <div
+              class="flex flex-col items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors support-item"
+              data-support-type="sales-manager">
+              <div
+                class="w-10 h-10 rounded-full bg-transparent flex items-center justify-center mb-1 border-2 border-orange-500">
+                <i class="fas fa-user-tie text-orange-500"></i>
+              </div>
+              <h4 class="text-[10px] font-medium text-orange-500 text-center">
+                Sales Manager
+              </h4>
+            </div>
+
+            <!-- Support Item 2 -->
+            <div
+              class="flex flex-col items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors support-item"
+              data-support-type="sales-support">
+              <div
+                class="w-10 h-10 rounded-full bg-transparent flex items-center justify-center mb-1 border-2 border-orange-200">
+                <i class="fas fa-headset text-orange-200"></i>
+              </div>
+              <h4 class="text-xs font-medium text-orange-200 text-center">
+                Sales Support
+              </h4>
+            </div>
+
+            <!-- Support Item 3 -->
+            <div
+              class="flex flex-col items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors support-item"
+              data-support-type="health-support">
+              <div
+                class="w-10 h-10 rounded-full bg-transparent border-2 border-orange-200 flex items-center justify-center mb-1">
+                <i class="fas fa-heartbeat text-orange-200"></i>
+              </div>
+              <h4 class="text-[10px] font-medium text-orange-200 text-center">
+                Health & life Support
+              </h4>
+            </div>
+
+            <!-- Support Item 4 -->
+            <div
+              class="flex flex-col items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors support-item"
+              data-support-type="non-motor-support">
+              <div
+                class="w-10 h-10 rounded-full bg-transparent flex items-center justify-center mb-1 border-2 border-orange-200">
+                <i class="fas fa-car text-orange-200"></i>
+              </div>
+              <h4 class="text-[10px] font-medium text-orange-200 text-center">
+                Non-Motor Support
+              </h4>
+            </div>
+          </div>
+          <hr />
+          <!-- Contact Information -->
+          <div class="p-3 rounded-lg flex items-center justify-between">
+            <div>
+              <h4
+                class="text-sm font-medium text-gray-800"
+                id="support-name"></h4>
+              <p class="text-[10px] text-gray-600 mt-1" id="support-number"></p>
+            </div>
+            <hr />
+            <div
+              class="w-10 h-10 rounded-full bg-orange-200 flex items-center justify-center mr-3">
+              <i class="fas fa-phone text-orange-500"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bell icon with notification indicator -->
+    <div class="relative">
+      <button
+        class="relative text-gray-600 hover:text-orange-500 transition-colors p-1"
+        id="notification-toggle">
+        <img
+          src="/assets/img/bell icon.svg"
+          alt="Notifications"
+          class="w-5 h-5 sm:w-6 sm:h-6" />
+        <!-- Notification count badge -->
+        <span
+          id="notification-count"
+          class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"
+          style="display: none"
+          >0</span
+        >
+      </button>
+
+      <!-- Notification Dropdown - Modified for mobile sliding effect -->
+      <div
+        id="notification-dropdown"
+        class="fixed top-0 right-0 h-full w-full bg-white shadow-xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out md:absolute md:top-full md:right-0 md:h-auto md:w-80 md:max-w-none md:transform-none md:mt-2 md:rounded-lg md:shadow-lg md:transition-none">
+        <!-- Mobile close button (visible only on mobile) -->
+        <div
+          class="md:hidden flex items-center justify-between p-4 shadow-[0_4px_10px_rgba(255,123,0,0.2)] relative">
+          <!-- Left Arrow -->
+          <button
+            id="close-notification-mobile"
+            class="text-gray-500 hover:text-gray-700">
+            <i class="fa-solid fa-arrow-left text-orange-500"></i>
+          </button>
+
+          <!-- Center Title -->
+          <h3
+            class="text-l font-semibold text-gray-800 absolute left-1/2 transform -translate-x-1/2">
+            Notifications
+          </h3>
+        </div>
+
+        <!-- Desktop header (hidden on mobile) -->
+        <div class="hidden md:flex p-4 border-b items-center justify-between">
+          <h3 class="text-lg font-semibold text-gray-800">Notifications</h3>
+          <!-- optional count badge -->
+          <span
+            id="notification-count-desktop"
+            class="text-xs bg-red-500 text-white rounded-full h-5 w-5 flex items-center justify-center"
+            style="display: none"
+            >0</span
+          >
+        </div>
+
+        <!-- Search bar -->
+        <div class="pt-4 px-4">
+          <div class="relative">
+            <input
+              type="text"
+              id="notification-search"
+              placeholder="Search Notification"
+              class="w-full px-3 py-3 text-sm border rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500" />
+            <i class="fas fa-search absolute right-3 top-1/3 text-gray-500"></i>
+          </div>
+        </div>
+
+        <!-- Notification list container -->
+        <div
+          id="notification-list"
+          class="overflow-y-auto m-4 rounded-2xl shadow-[0_4px_20px_6px_rgba(0,0,0,0.1)] md:shadow-none"
+          style="max-height: calc(100vh - 140px)">
+          <!-- items are added here dynamically -->
+          <div
+            id="notification-loading"
+            class="p-4 text-center text-sm text-gray-500"
+            style="border: 2px solid red !important">
+            Loading...
+          </div>
+        </div>
+
+        <!-- No result message (hidden by default) -->
+        <div
+          id="no-notification"
+          class="text-center text-gray-500 p-4"
+          style="display: none">
+          No notifications found
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile overlay (visible when notification is open on mobile) -->
+<div
+  id="notification-overlay"
+  class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden md:hidden"></div>

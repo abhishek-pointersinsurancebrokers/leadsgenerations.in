@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+    <!-- Include the same styles as in header.html -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- Google Fonts - Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet" />
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+      }
+      /* Custom styles for circular buttons */
+      .circle-btn {
+        width: 100px;
+        height: 100px;
+      }
+
+      /* Animation for hover effect */
+      .circle-btn:hover {
+        transform: scale(2);
+        transition: transform 0.5s ease-in-out;
+      }
+
+      /* Animation for notification items */
+      .notification-item {
+        animation: fadeIn 0.5s ease-in-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Container for 3D perspective */
+      .perspective-container {
+        perspective: 1000px;
+      }
+
+      /* Flip animation for image */
+      .flip-image {
+        transition: transform 1s;
+        transform-style: preserve-3d;
+      }
+
+      .group:hover .flip-image {
+        transform: rotateY(360deg) scale(2);
+      }
+
+      /* Flip animation for text */
+      .flip-text {
+        display: inline-block;
+        transition: transform 1s, color 0.5s;
+        transform-style: preserve-3d;
+      }
+
+      .group:hover .flip-text {
+        transform: rotateY(360deg);
+      }
+
+      /* Small dot at the end of stick */
+      .dot {
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+
+      .group:hover .dot {
+        opacity: 1;
+      }
+
+      /* Media queries for smaller screens */
+      @media (max-width: 640px) {
+        .flip-image {
+          height: 1.5rem;
+        }
+
+        /* Darker circles on mobile */
+        .circle-orange {
+          border-color: rgb(251, 146, 60) !important; /* orange-500 */
+          box-shadow: 2px 2px 5px 0px #00000040 inset;
+        }
+
+        .circle-red {
+          border-color: rgb(239, 68, 68) !important; /* red-500 */
+          box-shadow: 2px 2px 5px 0px #00000040 inset;
+        }
+
+        .circle-green {
+          border-color: rgb(34, 197, 94) !important; /* green-500 */
+          box-shadow: 2px 2px 5px 0px #00000040 inset;
+        }
+
+        .circle-purple {
+          border-color: rgb(168, 85, 247) !important; /* purple-500 */
+          box-shadow: 2px 2px 5px 0px #00000040 inset;
+        }
+
+        /* Always show sticks and dots on mobile - reduced stick height */
+        .stick {
+          height: 0.75rem !important; /* Reduced from 1.5rem to 0.75rem */
+        }
+
+        .dot {
+          opacity: 1 !important;
+        }
+
+        /* Text color matching parent circle on mobile */
+        .text-orange {
+          color: rgb(251, 146, 60) !important; /* orange-500 */
+          font-size: 0.875rem !important; /* text-sm */
+        }
+
+        .text-red {
+          color: rgb(239, 68, 68) !important; /* red-500 */
+          font-size: 0.875rem !important; /* text-sm */
+        }
+
+        .text-green {
+          color: rgb(34, 197, 94) !important; /* green-500 */
+          font-size: 0.875rem !important; /* text-sm */
+        }
+
+        .text-purple {
+          color: rgb(168, 85, 247) !important; /* purple-500 */
+          font-size: 0.875rem !important; /* text-sm */
+        }
+      }
+    </style>
+    <!-- Include the header loader script -->
+    <script src="/assets/js/main.js"></script>
+    <script src="/assets/js/auth.js"></script>
+  </head>
+  <body class="bg-gray-50">
+    <!-- Your page content -->
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+      <h1 class="text-2xl sm:text-3xl font-medium text-gray-800">Dashboard</h1>
+
+      <!-- Main Content -->
+      <main>
+        <div
+          class="w-full rounded-3xl mt-6 mb-6 flex flex-wrap justify-center gap-8 p-4 sm:p-6 md:p-10 bg-white shadow-[0_0_10px_rgba(0,0,0,0.1)]">
+          <!-- SINGLE ITEM -->
+          <a
+            href="grid-points.html"
+            class="group flex flex-col items-center cursor-pointer w-[calc(50%-1rem)] sm:w-auto">
+            <!-- Circle -->
+            <div
+              class="circle-orange relative w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 rounded-full border-[12px] sm:border-[15px] border-orange-200 flex items-center justify-center transition-all duration-500 group-hover:border-orange-500">
+              <!-- Icon -->
+              <div class="perspective-container">
+                <img
+                  src="/assets/img/rates icon.svg"
+                  alt=""
+                  class="flip-image h-8 sm:h-10" />
+              </div>
+
+              <!-- Stick Line -->
+              <span
+                class="stick absolute bottom-[-20px] sm:bottom-[-25px] w-1 h-0 bg-orange-500 transition-all duration-500 group-hover:h-6"></span>
+
+              <!-- Small Dot at the end of stick -->
+              <span
+                class="dot absolute bottom-[-26px] sm:bottom-[-31px] w-2 h-2 bg-orange-500 rounded-full"></span>
+            </div>
+
+            <!-- Text -->
+            <div class="perspective-container mt-6 sm:mt-8">
+              <p
+                class="text-orange text-gray-400 font-semibold text-lg sm:text-xl transition-all duration-500 flip-text group-hover:text-orange-500">
+                Grid Points
+              </p>
+            </div>
+          </a>
+
+          <!-- DUPLICATE ITEMS (Just change icon & text) -->
+
+          <a
+            href="guide-lines.html"
+            class="group flex flex-col items-center cursor-pointer w-[calc(50%-1rem)] sm:w-auto"
+            id="guidelineBtn">
+            <div
+              class="circle-red relative w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 rounded-full border-[12px] sm:border-[15px] border-red-200 flex items-center justify-center transition-all duration-500 group-hover:border-red-500">
+              <div class="perspective-container">
+                <img
+                  src="/assets/img/guidlines icon.svg"
+                  alt=""
+                  class="flip-image h-8 sm:h-10" />
+              </div>
+              <span
+                class="stick absolute bottom-[-20px] sm:bottom-[-25px] w-1 h-0 bg-red-500 transition-all duration-500 group-hover:h-6"></span>
+              <span
+                class="dot absolute bottom-[-26px] sm:bottom-[-31px] w-2 h-2 bg-red-500 rounded-full"></span>
+            </div>
+            <div class="perspective-container mt-6 sm:mt-8">
+              <p
+                class="text-red text-gray-400 font-semibold text-lg sm:text-xl transition-all duration-500 flip-text group-hover:text-red-500">
+                Guidelines
+              </p>
+            </div>
+          </a>
+
+          <a
+            href="rto-mappig.html"
+            class="group flex flex-col items-center cursor-pointer w-[calc(50%-1rem)] sm:w-auto">
+            <div>
+              <div
+                class="circle-green relative w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 rounded-full border-[12px] sm:border-[15px] border-green-200 flex items-center justify-center transition-all duration-500 group-hover:border-green-500">
+                <div class="perspective-container">
+                  <img
+                    src="/assets/img/rto mapping icon.svg"
+                    alt=""
+                    class="flip-image h-8 sm:h-10" />
+                </div>
+                <span
+                  class="stick absolute bottom-[-20px] sm:bottom-[-25px] w-1 h-0 bg-green-500 transition-all duration-500 group-hover:h-6"></span>
+                <span
+                  class="dot absolute bottom-[-26px] sm:bottom-[-31px] w-2 h-2 bg-green-500 rounded-full"></span>
+              </div>
+              <div class="perspective-container mt-6 sm:mt-8">
+                <p
+                  class="text-green text-gray-400 font-semibold text-lg sm:text-xl transition-all duration-500 flip-text group-hover:text-green-500">
+                  RTO Mapping
+                </p>
+              </div>
+            </div>
+          </a>
+
+          <a
+            href="#"
+            class="group flex flex-col items-center cursor-pointer w-[calc(50%-1rem)] sm:w-auto"
+            id="analiticsBtn">
+            <div
+              class="circle-purple relative w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 rounded-full border-[12px] sm:border-[15px] border-purple-200 flex items-center justify-center transition-all duration-500 group-hover:border-purple-500">
+              <div class="perspective-container">
+                <img
+                  src="/assets/img/analitics icon.svg"
+                  alt=""
+                  class="flip-image h-8 sm:h-10" />
+              </div>
+              <span
+                class="stick absolute bottom-[-20px] sm:bottom-[-25px] w-1 h-0 bg-purple-500 transition-all duration-500 group-hover:h-6"></span>
+              <span
+                class="dot absolute bottom-[-26px] sm:bottom-[-31px] w-2 h-2 bg-purple-500 rounded-full"></span>
+            </div>
+            <div class="perspective-container mt-6 sm:mt-8">
+              <p
+                class="text-purple text-gray-400 font-semibold text-lg sm:text-xl transition-all duration-500 flip-text group-hover:text-purple-500">
+                Analytics
+              </p>
+            </div>
+          </a>
+
+          <a
+            href="#"
+            class="group flex flex-col items-center cursor-pointer w-[calc(50%-1rem)] sm:w-auto"
+            id="gridnotificationBtn">
+            <div
+              class="circle-purple relative w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 rounded-full border-[12px] sm:border-[15px] border-blue-200 flex items-center justify-center transition-all duration-500 group-hover:border-blue-500">
+              <div class="perspective-container">
+                <img
+                  src="/assets/img/home bell icon.svg"
+                  alt=""
+                  class="flip-image h-8 sm:h-10" />
+              </div>
+              <span
+                class="stick absolute bottom-[-20px] sm:bottom-[-25px] w-1 h-0 bg-blue-500 transition-all duration-500 group-hover:h-6"></span>
+              <span
+                class="dot absolute bottom-[-26px] sm:bottom-[-31px] w-2 h-2 bg-blue-500 rounded-full"></span>
+            </div>
+            <div class="perspective-container mt-6 sm:mt-8">
+              <p
+                class="text-purple text-gray-400 font-semibold text-lg sm:text-xl transition-all duration-500 flip-text group-hover:text-blue-500">
+                Grid Notification
+              </p>
+            </div>
+          </a>
+
+          <a
+            href="#"
+            class="group flex flex-col items-center cursor-pointer w-[calc(50%-1rem)] sm:w-auto"
+            id="brodcastBtn">
+            <div
+              class="circle-purple relative w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 rounded-full border-[12px] sm:border-[15px] border-purple-200 flex items-center justify-center transition-all duration-500 group-hover:border-purple-500">
+              <div class="perspective-container">
+                <img
+                  src="/assets/img/brodcast icon.svg"
+                  alt=""
+                  class="flip-image h-8 sm:h-10" />
+              </div>
+              <span
+                class="stick absolute bottom-[-20px] sm:bottom-[-25px] w-1 h-0 bg-purple-500 transition-all duration-500 group-hover:h-6"></span>
+              <span
+                class="dot absolute bottom-[-26px] sm:bottom-[-31px] w-2 h-2 bg-purple-500 rounded-full"></span>
+            </div>
+            <div class="perspective-container mt-6 sm:mt-8">
+              <p
+                class="text-purple text-gray-400 font-semibold text-lg sm:text-xl transition-all duration-500 flip-text group-hover:text-purple-500">
+                Broadcast
+              </p>
+            </div>
+          </a>
+        </div>
+
+        <!-- Recent Notifications Section -->
+        <section>
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg sm:text-xl font-medium text-gray-800">
+              Recent Notifications
+            </h2>
+          </div>
+          <div class="shadow rounded-lg p-3 sm:p-4 bg-white">
+            Loading recent notifications...
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      const designation = JSON.parse(localStorage.getItem("user")).designation;
+      if (designation == "POS") {
+        const analiticsBtn = document.getElementById("analiticsBtn");
+        const gridnotificationBtn = document.getElementById(
+          "gridnotificationBtn"
+        );
+        const brodcastBtn = document.getElementById("brodcastBtn");
+        analiticsBtn.style.display = "none";
+        gridnotificationBtn.style.display = "none";
+        brodcastBtn.style.display = "none";
+      }
+
+      if (designation == "SS") {
+        const analiticsBtn = document.getElementById("analiticsBtn");
+        const guidelineBtn = document.getElementById("guidelineBtn");
+        analiticsBtn.style.display = "none";
+        guidelineBtn.style.display = "none";
+      }
+
+      if (designation == "Sales Manager ") {
+        const gridnotificationBtn = document.getElementById(
+          "gridnotificationBtn"
+        );
+        const brodcastBtn = document.getElementById("brodcastBtn");
+        gridnotificationBtn.style.display = "none";
+        brodcastBtn.style.display = "none";
+      }
+
+
+
+      
+      document.addEventListener("DOMContentLoaded", () => {
+        try {
+          const user = JSON.parse(localStorage.getItem("user"));
+          const role = user?.designation?.trim().toUpperCase();
+          const username = user?.username;
+
+          // Only add links if user is NOT POS
+          if (role !== "POS" && role !== "POS REFERRAL") {
+            const sidebarList = document.querySelector("#logo-sidebar ul");
+
+            // Add click event to Analytics link
+            const analyticsLink = document.getElementById("analiticsBtn");
+            analyticsLink.addEventListener("click", async (e) => {
+              e.preventDefault(); // prevent default link behavior
+
+              if (!username) return;
+
+              try {
+                const tokenUrl = `https://caffeinemetric.leadsgenerations.in/auth/generate-token?user=${encodeURIComponent(
+                  username
+                )}&des=Manager`;
+                console.log(tokenUrl);
+                const response = await fetch(tokenUrl);
+                console.log(response);
+                const data = await response.json();
+
+                if (data?.streamlit_url) {
+                  // Open the Streamlit URL in a new tab
+                  window.open(data.streamlit_url, "_blank");
+                } else {
+                  alert("Failed to generate Streamlit URL.");
+                }
+              } catch (err) {
+                console.error("Error fetching Streamlit token:", err);
+                alert("Error connecting to Streamlit API.");
+              }
+            });
+          }
+        } catch (e) {
+          console.error("Error adding sidebar links:", e);
+        }
+      });
+    </script>
+  </body>
+</html>
